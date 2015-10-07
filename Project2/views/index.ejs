@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <style>
+           body {
+               height: 500px;
+               width:700px;
+          }
+          #map {
+              height: 70%;
+              width:100%;
+          }
+      </style>
+    <h1>My Website</h1>
+      <script
+              src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBhRr4Ce-K2RcUwEz2MeMoXzV6nXtCDeGg"></script>
+
+  </head>
+  <body>
+
+
+
+  <input id="btnGetData" type = "button" value = "click to see data" class = "button" />
+  <br />
+  <div id="map"></div>
+
+  <span id = "demo"></span>
+
+  <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+  <script src ="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
+
+  <script type="text/javascript">
+
+      var locations = null;
+
+      $(function() {
+
+          $("#btnGetData").click(function(){
+
+              $.ajax(
+              {
+                  type: 'GET',
+                  url: 'http://cse5335-1001085818.herokuapp.com/users',
+                  dataType:'json',
+                  contentType:'application/json; charset=utf-8',
+                  success: function(data)
+                  {
+                      //alert('inside annymous success');
+                      SuccesscallBack(data);
+                  },
+                  error: function(result){
+                      error(result);
+                  }
+
+              });
+          });
+
+          var SuccesscallBack = function (data) {
+
+              var myLatLng = {lat: 32.8474332455072, lng: -96.8254467903616};
+              var map = new google.maps.Map(document.getElementById('map'), {
+                  zoom: 4,
+                  center: myLatLng
+              });
+              console.log('success');
+              $.each(data,function(key,value){
+                 // var location = {lat: value.lat , lng: value.lng };
+                  var location =  new google.maps.LatLng(value.lat, value.lng);
+                  //alert('lat: '+location.lat+' lng: '+location.lng);
+
+                  var marker = new google.maps.Marker({
+                      position: location,
+                      map: map,
+                      title: 'Hello World!'
+                  });
+                  $('#demo').append("<tr><td>"+value.name+"</td>" + "<td>"+value.location+"</td>"+ "<td>"+value.gender+"</td></tr><br>");
+              });
+              btnGetData.disabled=true;
+
+          }
+          var error =  function(result) {
+              alert("Error with result: "+result);
+          }
+
+      });
+
+
+
+
+  </script>
+
+
+  </body>
+
+  </body>
+</html>
